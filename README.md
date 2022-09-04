@@ -3,13 +3,7 @@
 
 Ссылка на сайт, размещенный на Яндекс.Облаке:
 
-Public IP Address:
+Public IP Address: 51.250.79.113
 
-Frontend:
-Backend:
-
-Для входа на сайт без регистрации пользователя:
-```
-Login: 1234@yandex.ru
-Password: qwerty
-```
+Frontend: https://pnrf.nomorepartiesxyz.ru
+Backend: https://api.pnrf.nomoredomains.sbs
