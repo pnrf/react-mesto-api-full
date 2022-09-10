@@ -3,7 +3,6 @@
 
 Ссылка на сайт, размещенный на Яндекс.Облаке:
 
-Public IP Address: 51.250.79.113
-
-Frontend: https://pnrf.nomorepartiesxyz.ru
-Backend: https://api.pnrf.nomoredomains.sbs
+- Public IP Address: 51.250.79.113
+- Frontend: pankratov.nomorepartiesxyz.ru
+- Backend: api.pankratov.nomorepartiesxyz.ru

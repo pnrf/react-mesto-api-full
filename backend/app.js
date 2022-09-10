@@ -32,7 +32,11 @@ app.use(cors({
     'http://localhost:3000',
     'https://localhost:3000',
     'http://localhost:3001',
-    'https://localhost:3000',
+    'https://localhost:3001',
+    'https://pankratov.nomorepartiesxyz.ru',
+    'http://pankratov.nomorepartiesxyz.ru',
+    'https://api.pankratov.nomorepartiesxyz.ru',
+    'http://api.pankratov.nomorepartiesxyz.ru',
   ],
   credentials: true,
 }));
