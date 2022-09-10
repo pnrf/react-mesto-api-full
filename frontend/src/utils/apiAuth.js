@@ -5,13 +5,15 @@ const checkResponse = (res) => {
     return Promise.reject(res.status);
 }
 
-const BASE_URL = 'https://auth.nomoreparties.co';
+// const BASE_URL = 'https://auth.nomoreparties.co';
+const BASE_URL = 'http://localhost:3001';
 
 const signUp = (email, password) => {
   const requestUrl = BASE_URL + '/signup';
   return fetch(requestUrl, {
     method: 'POST',
     headers: {"Content-Type": "application/json"},
+    credentials: 'include',
     body: JSON.stringify({ email, password }),
   }).then(checkResponse);
 }
@@ -21,6 +23,7 @@ const signIn = (email, password) => {
   return fetch(requestUrl, {
     method: 'POST',
     headers: {"Content-Type": "application/json"},
+    credentials: 'include',
     body: JSON.stringify({ email, password }),
   }).then(checkResponse);
 }
@@ -33,6 +36,7 @@ const checkToken = (token) => {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`
     },
+    credentials: 'include',
   }).then(checkResponse);
 }
 

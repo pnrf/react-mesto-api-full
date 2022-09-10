@@ -5,6 +5,7 @@ const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const cors = require('cors');
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // за 15 минут
@@ -22,8 +23,19 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   // useFindAndModify: false,
 });
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3001 } = process.env;
+// const PORT = process.env.PORT || 3001;
 const app = express();
+
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'https://localhost:3000',
+    'http://localhost:3001',
+    'https://localhost:3000',
+  ],
+  credentials: true,
+}));
 
 app.use(requestLogger);
 app.use(helmet());

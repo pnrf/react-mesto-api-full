@@ -42,9 +42,10 @@ export default function App() {
         setEmailValue(email);
         navigate("/");
       })
-      .catch(() => {
+      .catch((err) => {
         setPopupStatus({image: crossImg, message: 'Что-то пошло не так! Попробуйте еще раз.'});
         handleInfoTooltip();
+        console.log(`Ошибка: ${err.message}`);
       });
   };
 
