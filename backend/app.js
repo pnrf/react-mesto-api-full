@@ -5,7 +5,7 @@ const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const cors = require('cors');
+const allowedCors = require('./middlewares/allowedCors');
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // за 15 минут
@@ -27,20 +27,7 @@ const { PORT = 3001 } = process.env;
 // const PORT = process.env.PORT || 3001;
 const app = express();
 
-app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'https://localhost:3000',
-    'http://localhost:3001',
-    'https://localhost:3001',
-    'https://pankratov.nomorepartiesxyz.ru',
-    'http://pankratov.nomorepartiesxyz.ru',
-    'https://api.pankratov.nomorepartiesxyz.ru',
-    'http://api.pankratov.nomorepartiesxyz.ru',
-  ],
-  credentials: true,
-}));
-
+app.use(allowedCors);
 app.use(requestLogger);
 app.use(helmet());
 app.use(limiter);
