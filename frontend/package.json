@@ -18,7 +18,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build"
+    "predeploy": "npm run build",
+    "deploy": "scp -r ./build/* pankratov@51.250.79.113:/home/pankratov/react-mesto-api-full/build"
   },
   "eslintConfig": {
     "extends": [
