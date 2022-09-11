@@ -6,7 +6,8 @@ const checkResponse = (res) => {
 }
 
 // const BASE_URL = 'https://auth.nomoreparties.co';
-const BASE_URL = 'http://localhost:3001';
+// const BASE_URL = 'http://localhost:3001';
+const BASE_URL = 'https://api.pankratov.nomorepartiesxyz.ru';
 
 const signUp = (email, password) => {
   const requestUrl = BASE_URL + '/signup';
