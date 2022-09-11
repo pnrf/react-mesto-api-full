@@ -6,9 +6,7 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
-const allowedCors = require('./middlewares/allowedCors');
-
-console.log('aaa', allowedCors);
+// const allowedCors = require('./middlewares/allowedCors');
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // за 15 минут
@@ -31,7 +29,7 @@ const { PORT = 3001 } = process.env;
 const app = express();
 
 // --- альтернативное подключение CORS ---
-app.use(cors({
+app.use('*', cors({
   origin: [
     'http://localhost:3000',
     'https://localhost:3000',
@@ -42,10 +40,14 @@ app.use(cors({
     'https://api.pankratov.nomorepartiesxyz.ru',
     'http://api.pankratov.nomorepartiesxyz.ru',
   ],
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
   credentials: true,
 }));
 
-app.use(allowedCors);
+// app.use(allowedCors);
 app.use(requestLogger);
 app.use(helmet());
 app.use(limiter);

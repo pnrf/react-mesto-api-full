@@ -1,3 +1,3 @@
 /** Данные для авторизации API */
-export const token = '5eae0f7c-fffd-4787-98d9-3b4fe6d3aff1';
-export const cohort = 'cohort-41';
+export const token = 'd4e7cdcf-2b6a-41c7-936c-e112010ee602';
+export const cohort = 'cohort-42';
