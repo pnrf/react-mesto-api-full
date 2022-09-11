@@ -17,15 +17,18 @@ module.exports = (req, res, next) => {
   const { origin } = req.headers;
   if (allowedCors.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
+    console.log('Проверяю cors 1', origin);
   }
 
   const { method } = req;
   const requestHeaders = req.headers['access-control-request-headers'];
   if (method === 'OPTIONS') {
     res.header('Access-Control-Allow-Methods', requestHeaders);
+    console.log('Проверяю cors 2', requestHeaders);
     return res.end();
   }
 
+  console.log('Проверяю cors 3');
   return next();
 };
 
