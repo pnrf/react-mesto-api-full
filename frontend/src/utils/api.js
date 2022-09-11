@@ -1,4 +1,4 @@
-import {token, cohort} from './authorizationData'
+// import {token, cohort} from './authorizationData'
 
 class Api {
   constructor({baseUrl, headers}) {
@@ -18,6 +18,7 @@ class Api {
     const requestUrl = this._baseUrl + `/users/me`;
     return fetch(requestUrl, {
       headers: this._headers,
+      credentials: 'include',
     }).then(this._checkResponse);
   }
 
@@ -25,6 +26,7 @@ class Api {
     const requestUrl = this._baseUrl + '/cards';
     return fetch(requestUrl, {
       headers: this._headers,
+      credentials: 'include',
     }).then(this._checkResponse);
   }
 
@@ -38,6 +40,7 @@ class Api {
       method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify(body),
+      credentials: 'include',
     }).then(this._checkResponse);
   }
 
@@ -47,6 +50,7 @@ class Api {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify(body),
+      credentials: 'include',
     }).then(this._checkResponse);
   }
 
@@ -55,6 +59,7 @@ class Api {
     return fetch(requestUrl, {
       method: 'DELETE',
       headers: this._headers,
+      credentials: 'include',
     }).then(this._checkResponse);
   }
 
@@ -63,6 +68,7 @@ class Api {
     return fetch(requestUrl, {
       method: 'PUT',
       headers: this._headers,
+      credentials: 'include',
     }).then(this._checkResponse);
   }
 
@@ -71,6 +77,7 @@ class Api {
     return fetch(requestUrl, {
       method: 'DELETE',
       headers: this._headers,
+      credentials: 'include',
     }).then(this._checkResponse);
   }
 
@@ -80,14 +87,16 @@ class Api {
       method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify(body),
+      credentials: 'include',
     }).then(this._checkResponse);
   }
 }
 
 const api = new Api({
-  baseUrl: `https://mesto.nomoreparties.co/v1/${cohort}`,
+  baseUrl: 'api.pankratov.nomorepartiesxyz.ru',
+  // baseUrl: `https://mesto.nomoreparties.co/v1/${cohort}`,
   headers: {
-    authorization: token,
+    // authorization: token,
     'Content-Type': 'application/json'
   }
 });
