@@ -20,11 +20,11 @@ const errorHandler = require('./middlewares/errorHandler');
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
-  // useCreateIndex: true,
-  // useFindAndModify: false,
+  useCreateIndex: true,
+  useFindAndModify: false,
 });
 
-const { PORT = 3001 } = process.env;
+const { PORT = 3000 } = process.env;
 // const PORT = process.env.PORT || 3001;
 const app = express();
 
