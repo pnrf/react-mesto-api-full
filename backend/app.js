@@ -6,7 +6,6 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
-// const allowedCors = require('./middlewares/allowedCors');
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // за 15 минут
@@ -19,7 +18,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const errorHandler = require('./middlewares/errorHandler');
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
-  // useNewUrlParser: true,
+  useNewUrlParser: true,
   // useCreateIndex: true,
   // useFindAndModify: false,
 });
@@ -28,26 +27,16 @@ const { PORT = 3001 } = process.env;
 // const PORT = process.env.PORT || 3001;
 const app = express();
 
-// --- альтернативное подключение CORS ---
-app.use('*', cors({
+app.use(cors({
   origin: [
     'http://localhost:3000',
     'https://localhost:3000',
     'http://localhost:3001',
-    'https://localhost:3001',
-    'https://pankratov.nomorepartiesxyz.ru',
-    'http://pankratov.nomorepartiesxyz.ru',
-    'https://api.pankratov.nomorepartiesxyz.ru',
-    'http://api.pankratov.nomorepartiesxyz.ru',
+    'https://localhost:3000',
   ],
-  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
-  allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
   credentials: true,
 }));
 
-// app.use(allowedCors);
 app.use(requestLogger);
 app.use(helmet());
 app.use(limiter);
@@ -56,7 +45,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use(express.static(path.join(__dirname, 'public')));
 
-// Удалить этот код после успешного прохождения ревью:
+// Не забудьте удалить этот код после успешного прохождения ревью:
 app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');

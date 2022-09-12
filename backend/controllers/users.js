@@ -6,7 +6,6 @@ const User = require('../models/user');
 const { jwtKey } = require('../utils/jwtKey');
 
 const {
-  AuthError,
   BadRequestError,
   ConflictError,
   NotFoundError,
@@ -95,7 +94,7 @@ module.exports.login = (req, res, next) => {
         .cookie('jwt', token, {
           maxAge: 3600000,
           httpOnly: true,
-          sameSite: false,
+          sameSite: true,
         })
         .send({ token });
     })
@@ -112,20 +111,6 @@ module.exports.logout = (req, res, next) => {
       return res.clearCookie('jwt').send({ message: 'Выход' });
     })
     .catch(next);
-};
-
-module.exports.checkCookies = (req, res) => {
-  const cookie = req.cookies;
-  if (!cookie) {
-    throw new AuthError('Требуется авторизоваться');
-  }
-  const token = cookie.jwt;
-  try {
-    jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : jwtKey);
-    res.send({ message: 'OK' });
-  } catch (err) {
-    res.send({ message: 'Unauthorized' });
-  }
 };
 
 module.exports.updateProfile = (req, res, next) => {
