@@ -93,8 +93,8 @@ class Api {
 }
 
 const api = new Api({
-  baseUrl: 'api.pankratov.nomorepartiesxyz.ru',
-  // baseUrl: `https://mesto.nomoreparties.co/v1/${cohort}`,
+  baseUrl: 'http://localhost:3000',
+  // baseUrl: 'api.pankratov.nomorepartiesxyz.ru',
   headers: {
     // authorization: token,
     'Content-Type': 'application/json'

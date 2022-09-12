@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import '../index.css';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import api from '../utils/api';
-import {signUp, signIn, checkToken} from '../utils/apiAuth';
+import {signUp, signIn, signOut, checkCookies} from '../utils/apiAuth';
 import Header from './Header';
 import Footer from './Footer';
 import Main from './Main';
@@ -37,7 +37,7 @@ export default function App() {
   function handleLogin(email, password) {
     signIn(email, password)
       .then((res) => {
-        localStorage.setItem('jwt', res.token);
+        // localStorage.setItem('jwt', res.token);
         setIsLoggedIn(true);
         setEmailValue(email);
         navigate("/");
@@ -61,33 +61,69 @@ export default function App() {
       .finally(handleInfoTooltip);
   };
 
+  // function handleLogOut() {
+  //   setIsLoggedIn(false);
+  //   localStorage.removeItem('jwt');
+  //   setEmailValue(null);
+  //   navigate("/signin");
+  // };
+
   function handleLogOut() {
-    setIsLoggedIn(false);
-    localStorage.removeItem('jwt');
-    setEmailValue(null);
-    navigate("/signin");
-  };
+    signOut()
+      .then(() => {
+        setIsLoggedIn(false);
+        setEmailValue(null);
+        navigate("/signin");
+      })
+      .catch((err) => {
+        console.log(`Ошибка: ${err.message}`);
+      })
+  }
 
   function handleInfoTooltip() {
     setInfoTooltip(true);
   };
 
-  useEffect(() => {
-    const jwt = localStorage.getItem('jwt');
-    if (jwt) {
-      checkToken(jwt)
-        .then((res) => {
-          if (res) {
-            setIsLoggedIn(true);
-            setEmailValue(res.data.email);
-            navigate('/');
+  // useEffect(() => {
+  //   const jwt = localStorage.getItem('jwt');
+  //   if (jwt) {
+  //     checkToken(jwt)
+  //       .then((res) => {
+  //         if (res) {
+  //           console.log('aa', res);
+  //           setIsLoggedIn(true);
+  //           setEmailValue(res.data.email);
+  //           navigate('/');
+  //         }
+  //       })
+  //       .catch((err) => {
+  //         console.error(err);
+  //       });
+  //   }
+  // }, [navigate]);
+
+  const handleCookiesCheck = useCallback(() => {
+    checkCookies()
+      .then((res) => {
+          if (res.message === 'Unauthorized') {
+            setIsLoggedIn(false);
+            setEmailValue(null);
+            navigate('/signin');
+          } else if (res.message === 'OK') {
+              setIsLoggedIn(true);
+              setEmailValue(res.data.email);
+              navigate('/');
           }
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }
-  }, []);
+      })
+      .catch((err) => {
+          setIsLoggedIn(false);
+          console.log(err.message);
+      })
+  }, [navigate]);
+
+  useEffect(() => {
+    handleCookiesCheck()
+  }, [handleCookiesCheck]);
 
   useEffect(() => {
     if (isLoggedIn) {

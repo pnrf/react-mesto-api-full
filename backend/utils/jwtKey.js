@@ -1,1 +1,1 @@
-// module.exports = { jwtKey: 'some-secret-key' };
+module.exports = { jwtKey: 'some-secret-key' };

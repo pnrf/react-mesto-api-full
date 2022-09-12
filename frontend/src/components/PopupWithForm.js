@@ -8,7 +8,7 @@ function PopupWithForm({isOpen, onClose, onCloseEsc, onCloseOverlay, onSubmit, i
     } else {
       document.removeEventListener('keydown', onCloseEsc);
     }
-  }, [isOpen])
+  }, [isOpen, onCloseEsc])
 
   useEffect(() => {
     if (isOpen) {
@@ -16,7 +16,7 @@ function PopupWithForm({isOpen, onClose, onCloseEsc, onCloseOverlay, onSubmit, i
     } else {
       document.removeEventListener('mousedown', onCloseOverlay);
     }
-  }, [isOpen])
+  }, [isOpen, onCloseOverlay])
 
   return (
     <section className={`popup popup_type_${name} ${isOpen && `popup_opened`}`}>

@@ -5,9 +5,8 @@ const checkResponse = (res) => {
     return Promise.reject(res.status);
 }
 
-// const BASE_URL = 'https://auth.nomoreparties.co';
-// const BASE_URL = 'http://localhost:3001';
-const BASE_URL = 'https://api.pankratov.nomorepartiesxyz.ru';
+const BASE_URL = 'http://localhost:3000';
+// const BASE_URL = 'https://api.pankratov.nomorepartiesxyz.ru';
 
 const signUp = (email, password) => {
   const requestUrl = BASE_URL + '/signup';
@@ -29,16 +28,34 @@ const signIn = (email, password) => {
   }).then(checkResponse);
 }
 
-const checkToken = (token) => {
-  const requestUrl = BASE_URL + '/users/me';
+const signOut = () => {
+  const requestUrl = BASE_URL + '/singout';
   return fetch(requestUrl, {
-    method: 'GET',
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
-    },
+    method: 'POST',
+    headers: {"Content-Type": "application/json"},
     credentials: 'include',
-  }).then(checkResponse);
+    }).then(checkResponse);
 }
 
-export {signUp, signIn, checkToken};
+// const checkToken = (token) => {
+//   const requestUrl = BASE_URL + '/users/me';
+//   return fetch(requestUrl, {
+//     method: 'GET',
+//     headers: {
+//       "Content-Type": "application/json",
+//       "Authorization": `Bearer ${token}`
+//     },
+//     credentials: 'include',
+//   }).then(checkResponse);
+// }
+
+const checkCookies = () => {
+  const requestUrl = BASE_URL + '/check';
+  return fetch(requestUrl, {
+    method: 'GET',
+    headers: {"Content-Type": "application/json"},
+    credentials: 'include',
+    }).then(checkResponse);
+}
+
+export {signUp, signIn, signOut, checkCookies};

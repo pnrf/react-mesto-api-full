@@ -21,8 +21,8 @@ export default function Login({onLogin}) {
     <section className='auth'>
       <h3 className='auth__title'>Вход</h3>
       <form className='auth__form' onSubmit={handleSubmit}>
-        <input className='auth__input' type='email' placeholder='Email' value={email} onChange={handleEmailInput} required></input>
-        <input className='auth__input' type='password' placeholder='Пароль' value={password} onChange={handlePasswordInput} required></input>
+        <input className='auth__input' type='email' placeholder='Email' value={email} onChange={handleEmailInput} autoComplete="username" required></input>
+        <input className='auth__input' type='password' placeholder='Пароль' value={password} onChange={handlePasswordInput} autoComplete="current-password" required></input>
         <button className='auth__submit-button'>Войти</button>
       </form>
     </section>
