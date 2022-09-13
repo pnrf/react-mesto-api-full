@@ -34,10 +34,11 @@ export default function App() {
   const [infoTooltip, setInfoTooltip] = useState(false);
   const navigate = useNavigate();
 
-  function handleLogin(email, password) {
-    signIn(email, password)
+  function handleLogin({email, password}) {
+    signIn({email, password})
       .then((res) => {
-        // localStorage.setItem('jwt', res.token);
+        console.log(email, res.token);
+        localStorage.setItem('jwt', res.token);
         setIsLoggedIn(true);
         setEmailValue(email);
         navigate("/");
@@ -49,8 +50,8 @@ export default function App() {
       });
   };
 
-  function handleRegister(email, password) {
-    signUp(email, password)
+  function handleRegister({email, password}) {
+    signUp({email, password})
       .then(() => {
         setPopupStatus({image: checkmarkImg, message: 'Вы успешно зарегистрировались!'});
         navigate("/signin");
@@ -111,7 +112,7 @@ export default function App() {
             navigate('/signin');
           } else if (res.message === 'OK') {
               setIsLoggedIn(true);
-              setEmailValue(res.data.email);
+              setEmailValue(res.email);
               navigate('/');
           }
       })

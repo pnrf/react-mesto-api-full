@@ -1,5 +1,5 @@
 {
-  "name": "mesto-api-backend",
+  "name": "mesto-react-api-full-backend",
   "version": "1.0.0",
   "description": "Проект Mesto: фронтенд + бэкенд. Это учебный проект по основам backend на курсе веб-разработчик в Яндекс.Практикуме (13-14 спринты)",
   "main": "app.js",
