@@ -62,24 +62,24 @@ export default function App() {
       .finally(handleInfoTooltip);
   };
 
-  // function handleLogOut() {
-  //   setIsLoggedIn(false);
-  //   localStorage.removeItem('jwt');
-  //   setEmailValue(null);
-  //   navigate("/signin");
-  // };
-
   function handleLogOut() {
-    signOut()
-      .then(() => {
-        setIsLoggedIn(false);
-        setEmailValue(null);
-        navigate("/signin");
-      })
-      .catch((err) => {
-        console.log(`Ошибка: ${err.message}`);
-      })
-  }
+    setIsLoggedIn(false);
+    localStorage.removeItem('jwt');
+    setEmailValue(null);
+    navigate("/signin");
+  };
+
+  // function handleLogOut() {
+  //   signOut()
+  //     .then(() => {
+  //       setIsLoggedIn(false);
+  //       setEmailValue(null);
+  //       navigate("/signin");
+  //     })
+  //     .catch((err) => {
+  //       console.log(`Ошибка: ${err.message}`);
+  //     })
+  // }
 
   function handleInfoTooltip() {
     setInfoTooltip(true);
