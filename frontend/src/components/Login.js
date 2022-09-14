@@ -1,30 +1,32 @@
-import {useState} from 'react';
+import { useState } from "react";
 
-export default function Login({onLogin}) {
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
+function Login(props) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handlePasswordInput = event => {
-    setPassword(event.target.value);
-  };
+  function handleMailInput(evt) {
+    setEmail(evt.target.value);
+  }
 
-  const handleEmailInput = event => {
-    setEmail(event.target.value);
-  };
+  function handlePasswordInput(evt) {
+    setPassword(evt.target.value);
+  }
 
-  const handleSubmit = event => {
-    event.preventDefault();
-    onLogin({email, password});
-  };
+  function handleSubmit(evt) {
+    evt.preventDefault();
+    props.onLogin(email, password);
+  }
 
   return (
     <section className='auth'>
       <h3 className='auth__title'>Вход</h3>
       <form className='auth__form' onSubmit={handleSubmit}>
-        <input className='auth__input' type='email' placeholder='Email' value={email} onChange={handleEmailInput} autoComplete="username" required></input>
-        <input className='auth__input' type='password' placeholder='Пароль' value={password} onChange={handlePasswordInput} autoComplete="current-password" required></input>
-        <button className='auth__submit-button'>Войти</button>
+        <input className='auth__input' type="email" placeholder="Email" value={email} onChange={handleMailInput} required/>
+        <input className='auth__input' type="password" placeholder="Пароль" value={password} autoComplete="on" onChange={handlePasswordInput} required/>
+        <button className='auth__submit-button' type="submit">Войти</button>
       </form>
     </section>
   );
 };
+
+export default Login;

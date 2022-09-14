@@ -1,58 +1,58 @@
 import React from "react";
-import PopupWithForm from './PopupWithForm';
+import PopupWithForm from "./PopupWithForm";
 
-function AddPlacePopup({isOpen, onClose, onCloseEsc, onCloseOverlay, onAddPlace, isLoading}) {
-  const [title, setTitle] = React.useState('');
+function AddPlacePopup(props) {
+  const [name, setName] = React.useState('');
   const [link, setLink] = React.useState('');
 
+  function handleNameChange(evt) {
+    setName(evt.target.value);
+  }
+
+  function handleLinkChange(evt) {
+    setLink(evt.target.value);
+  }
+
+  function handleSubmit(evt) {
+    evt.preventDefault();
+
+    props.onSubmit({
+      name: name,
+      link: link,
+    });
+
+    props.onClose();
+  }
+
   React.useEffect(() => {
-    if (isOpen) {
-      setTitle('');
+    if (props.isOpen) {
+      setName('');
       setLink('');
     }
-  }, [isOpen])
+  }, [props.isOpen]);
 
-  function handleTitleChange(event) {
-    setTitle(event.target.value);
-  }
-
-  function handleLinkChange(event) {
-    setLink(event.target.value);
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    onAddPlace({
-      name: title,
-      link: link
-    });
-  }
-
-  return (
+  return(
     <PopupWithForm
-      isOpen = {isOpen}
-      onClose = {onClose}
-      onCloseEsc = {onCloseEsc}
-      onCloseOverlay = {onCloseOverlay}
-      onSubmit = {handleSubmit}
-      isLoading = {isLoading}
-      name = 'cards'
-      title = 'Новое место'
-      submitButton = 'Добавить'
-      submitBtnLoading = 'Добавление...'
-      children = {
-        <>
-          <label className="popup__field">
-            <input id="place-input" name="name" className="popup__input" value={title} onChange={handleTitleChange} type="text" placeholder="Название" minLength="2" maxLength="30" required />
-            <span className="popup__input-error"></span>
-          </label>
-          <label className="popup__field">
-            <input id="url-input" name="link" className="popup__input" value={link} onChange={handleLinkChange} type="url" placeholder="Ссылка на картинку" required />
-            <span className="popup__input-error"></span>
-          </label>
-        </>
-      }
-    />
+      isOpen={props.isOpen}
+      onCloseClick={props.onCloseClick}
+      onClose={props.onClose}
+      name={'add'}
+      form={'placeData'}
+      title={'Новое место'}
+      buttonText={'Создать'}
+      onSubmit={handleSubmit}
+    >
+      <>
+        <label className="popup__field">
+          <input className="popup__input" id="place_name" name="name" type="text" placeholder="Название" minLength="2" maxLength="30" value={name} onChange={handleNameChange} required/>
+          <span className="popup__input-error" id="place_name-error"/>
+        </label>
+        <label className="popup__field">
+          <input className="popup__input" id="place_link" name="link" type="url" placeholder="Ссылка на картинку" value={link} onChange={handleLinkChange} required/>
+          <span className="popup__input-error" id="place_link-error"/>
+        </label>
+      </>
+    </PopupWithForm>
   )
 }
 

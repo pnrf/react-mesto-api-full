@@ -1,104 +1,111 @@
-// import {token, cohort} from './authorizationData'
-
 class Api {
-  constructor({baseUrl, headers}) {
-    this._headers = headers;
-    this._baseUrl = baseUrl;
+  constructor(options) {
+    this._baseUrl = options.baseUrl;
+    this._headers = options.headers;
   }
 
-  _checkResponse(res) {
+  _handleRes(res) {
     if (res.ok) {
       return res.json();
-    } else {
-      return Promise.reject(`${res.status} ${res.statusText}`);
     }
+    return Promise.reject(`${res.status} ${res.statusText}`);
+  }
+
+  _getHeaders() {
+    const jwt = localStorage.getItem('jwt');
+    return {
+      'Authorization': `Bearer ${jwt}`,
+      ...this._headers,
+    };
   }
 
   getUserInfo() {
-    const requestUrl = this._baseUrl + `/users/me`;
-    return fetch(requestUrl, {
-      headers: this._headers,
-      credentials: 'include',
-    }).then(this._checkResponse);
+    return fetch(`${this._baseUrl}/users/me`, {
+      headers: this._getHeaders(),
+    }).then((res) => {
+      return this._handleRes(res);
+    });
   }
 
   getInitialCards() {
-    const requestUrl = this._baseUrl + '/cards';
-    return fetch(requestUrl, {
-      headers: this._headers,
-      credentials: 'include',
-    }).then(this._checkResponse);
+    return fetch(`${this._baseUrl}/cards`, {
+      headers: this._getHeaders(),
+    }).then((res) => {
+      return this._handleRes(res);
+    });
   }
 
-  getDataFromServer() {
-    return Promise.all([this.getInitialCards(), this.getUserInfo()]);
-  }
-
-  updateUserInfo(body) {
-    const requestUrl = this._baseUrl + `/users/me`;
-    return fetch(requestUrl, {
+  updateUserInfo(data) {
+    return fetch(`${this._baseUrl}/users/me`, {
       method: 'PATCH',
-      headers: this._headers,
-      body: JSON.stringify(body),
-      credentials: 'include',
-    }).then(this._checkResponse);
+      headers: this._getHeaders(),
+      body: JSON.stringify({
+        name: data.profile_name,
+        about: data.profile_job,
+      }),
+    }).then((res) => {
+      return this._handleRes(res);
+    });
   }
 
-  addNewCard(body) {
-    const requestUrl = this._baseUrl + '/cards';
-    return fetch(requestUrl, {
+  addNewCard(user) {
+    return fetch(`${this._baseUrl}/cards`, {
       method: 'POST',
-      headers: this._headers,
-      body: JSON.stringify(body),
-      credentials: 'include',
-    }).then(this._checkResponse);
+      headers: this._getHeaders(),
+      body: JSON.stringify({
+        name: user.name,
+        link: user.link,
+      }),
+    }).then((res) => {
+      return this._handleRes(res);
+    });
   }
 
-  removeCard(cardId) {
-    const requestUrl = this._baseUrl + `/cards/${cardId}`;
-    return fetch(requestUrl, {
+  removeCard(data) {
+    return fetch(`${this._baseUrl}/cards/${data._id}`, {
       method: 'DELETE',
-      headers: this._headers,
-      credentials: 'include',
-    }).then(this._checkResponse);
+      headers: this._getHeaders(),
+    }).then((res) => {
+      return this._handleRes(res);
+    });
   }
 
-  addCardLike(cardId) {
-    const requestUrl = this._baseUrl + `/cards/likes/${cardId}`;
-    return fetch(requestUrl, {
+  addCardLike(id) {
+    return fetch(`${this._baseUrl}/cards/${id}/likes`, {
       method: 'PUT',
-      headers: this._headers,
-      credentials: 'include',
-    }).then(this._checkResponse);
+      headers: this._getHeaders(),
+    }).then((res) => {
+      return this._handleRes(res);
+    });
   }
 
-  deleteCardLike(cardId) {
-    const requestUrl = this._baseUrl + `/cards/likes/${cardId}`;
-    return fetch(requestUrl, {
+  deleteCardLike(id) {
+    return fetch(`${this._baseUrl}/cards/${id}/likes`, {
       method: 'DELETE',
-      headers: this._headers,
-      credentials: 'include',
-    }).then(this._checkResponse);
+      headers: this._getHeaders(),
+    }).then((res) => {
+      return this._handleRes(res);
+    });
   }
 
-  updateProfileAvatar(body) {
-    const requestUrl = this._baseUrl + `/users/me/avatar`;
-    return fetch(requestUrl, {
+  updateProfileAvatar(data) {
+    return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: 'PATCH',
-      headers: this._headers,
-      body: JSON.stringify(body),
-      credentials: 'include',
-    }).then(this._checkResponse);
+      headers: this._getHeaders(),
+      body: JSON.stringify({
+        avatar: data.avatar,
+      }),
+    }).then((res) => {
+      return this._handleRes(res);
+    });
   }
 }
 
 const api = new Api({
-  baseUrl: 'http://localhost:3001',
-  // baseUrl: 'api.pankratov.nomorepartiesxyz.ru',
+  baseUrl: 'http://localhost:3000',
   headers: {
-    // authorization: token,
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+  },
 });
 
 export default api;
