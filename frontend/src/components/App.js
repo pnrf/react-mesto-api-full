@@ -25,6 +25,7 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
@@ -77,7 +78,7 @@ function App() {
     }).catch(() => {
       closeAllPopups();
       setPopupImage(reject);
-      setPopupTitle("Неправильная почта или пароль.");
+      setPopupTitle("Неверно указаны почта или пароль");
       handleInfoTooltip();
     });
   }
@@ -92,7 +93,7 @@ function App() {
         .catch(() => {
           closeAllPopups();
           setPopupImage(reject);
-          setPopupTitle("Что-то пошло не так! Ошибка авторизации.");
+          setPopupTitle("Что-то пошло не так!");
           handleInfoTooltip();
         });
     }
@@ -107,7 +108,7 @@ function App() {
       }).catch(() => {
         closeAllPopups();
         setPopupImage(reject);
-        setPopupTitle("Что-то пошло не так! Не удалось поставить лайк.");
+        setPopupTitle("Что-то пошло не так!");
         handleInfoTooltip();
       });
     } else {
@@ -116,32 +117,38 @@ function App() {
       }).catch(() => {
         closeAllPopups();
         setPopupImage(reject);
-        setPopupTitle("Что-то пошло не так! Не удалось снять лайк.");
+        setPopupTitle("Что-то пошло не так!");
         handleInfoTooltip();
       });
     }
   }
 
   function handleUpdateUser(data) {
+    setLoading(true);
     api.updateUserInfo(data).then((newUser) => {
       setCurrentUser(newUser);
       closeAllPopups();
     }).catch(() => {
       setPopupImage(reject);
-      setPopupTitle("Что-то пошло не так! Не удалось обновить профиль.");
+      setPopupTitle("Что-то пошло не так!");
       handleInfoTooltip();
+    }).finally(() => {
+      setLoading(false)
     });
   }
 
   function handleAddPlaceSubmit(data) {
+    setLoading(true);
     api.addNewCard(data).then((newCard) => {
       setCards([newCard, ...cards]);
       closeAllPopups();
     }).catch(() => {
       closeAllPopups();
       setPopupImage(reject);
-      setPopupTitle("Что-то пошло не так! Не удалось создать карточку.");
+      setPopupTitle("Что-то пошло не так!");
       handleInfoTooltip();
+    }).finally(() => {
+      setLoading(false)
     });
   }
 
@@ -152,20 +159,23 @@ function App() {
     }).catch(() => {
       closeAllPopups();
       setPopupImage(reject);
-      setPopupTitle("Что-то пошло не так! Не удалось удалить карточку.");
+      setPopupTitle("Что-то пошло не так!");
       handleInfoTooltip();
     });
   }
 
   function handleAvatarUpdate(data) {
     api.updateProfileAvatar(data).then((newAvatar) => {
+      setLoading(true);
       setCurrentUser(newAvatar);
       closeAllPopups();
     }).catch(() => {
       closeAllPopups();
       setPopupImage(reject);
-      setPopupTitle("Что-то пошло не так! Не удалось обновить аватар.");
+      setPopupTitle("Что-то пошло не так!");
       handleInfoTooltip();
+    }).finally(() => {
+      setLoading(false)
     });
   }
 
@@ -281,6 +291,7 @@ function App() {
           onCloseClick={handlePopupCloseClick}
           onClose={closeAllPopups}
           onSubmit={handleUpdateUser}
+          isLoading = {isLoading}
         />
 
         <AddPlacePopup
@@ -288,6 +299,7 @@ function App() {
           onCloseClick={handlePopupCloseClick}
           onClose={closeAllPopups}
           onSubmit={handleAddPlaceSubmit}
+          isLoading = {isLoading}
         />
 
         <DeleteCardPopup
@@ -303,6 +315,7 @@ function App() {
           onCloseClick={handlePopupCloseClick}
           onClose={closeAllPopups}
           onSubmit={handleAvatarUpdate}
+          isLoading = {isLoading}
         />
 
         <ImagePopup

@@ -7,10 +7,7 @@ const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
 const cors = require('./middlewares/cors');
 const { createUser, login } = require('./controllers/users');
-const {
-  validateUserCreating,
-  validateLogin,
-} = require('./middlewares/validators');
+const { validateUserCreating, validateLogin } = require('./middlewares/validators');
 const routes = require('./routes');
 const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
