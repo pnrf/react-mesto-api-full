@@ -17,6 +17,12 @@ const limiter = rateLimit({
   max: 100, // можно совершить максимум 100 запросов с одного IP
 });
 
+mongoose.connect('mongodb://localhost:27017/mestodb', {
+  // useNewUrlParser: true,
+  // useCreateIndex: true,
+  // useFindAndModify: false,
+});
+
 const { PORT = 3000 } = process.env;
 const app = express();
 app.use(express.json());
@@ -41,12 +47,6 @@ app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
-});
-
-mongoose.connect('mongodb://localhost:27017/mestodb', {
-  // useNewUrlParser: true,
-  // useCreateIndex: true,
-  // useFindAndModify: false,
 });
 
 app.listen(PORT, () => {
