@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://localhost:3000';
+export const BASE_URL = 'http://localhost:3001';
 // const BASE_URL = 'https://api.pankratov.nomorepartiesxyz.ru';
 
 export function registerUser(email, password) {

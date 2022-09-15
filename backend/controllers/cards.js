@@ -6,10 +6,11 @@ const {
   NotFoundError,
 } = require('../errors/index-errors');
 
-module.exports.getAllCards = (req, res, next) => {
-  Card
-    .find({})
-    .then((cards) => res.send({ cards }))
+module.exports.getCards = (req, res, next) => {
+  const { allCards } = {};
+  return Card
+    .find(allCards)
+    .then((cards) => res.send(cards))
     .catch(next);
 };
 
@@ -17,31 +18,34 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
 
-  Card
+  return Card
     .create({ name, link, owner })
-    .then((card) => res.send({ card }))
+    .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError(`Переданы некорректные данные при создании карточки -- ${err.name}`));
+        throw new BadRequestError(`Переданы некорректные данные при создании карточки -- ${err.name}`);
       } else {
         next(err);
       }
     });
 };
 
-module.exports.deleteCardById = (req, res, next) => {
-  const { cardId } = req.params;
+module.exports.deleteCard = (req, res, next) => {
+  const cardId = req.params.id;
 
-  Card
+  return Card
     .findById(cardId)
+    .orFail(() => {
+      throw new NotFoundError('Карточка с указанным _id не найдена');
+    })
     .then((card) => {
-      if (!card) {
-        return next(new NotFoundError('Карточка с указанным _id не найдена'));
+      if (card.owner.toString() === req.user._id) {
+        return Card
+          .findByIdAndRemove(cardId)
+          .then(() => res.send(card))
+          .catch(next);
       }
-      if (!card.owner.equals(req.user._id)) {
-        return next(new ForbiddenError('Попытка удалить чужую карточку'));
-      }
-      return card.remove().then(() => res.send({ message: 'Карточка успешно удалена' }));
+      throw new ForbiddenError('Попытка удалить чужую карточку');
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -55,20 +59,19 @@ module.exports.deleteCardById = (req, res, next) => {
 module.exports.likeCard = (req, res, next) => {
   Card
     .findByIdAndUpdate(
-      req.params.cardId,
+      req.params.id,
       { $addToSet: { likes: req.user._id } },
       { new: true },
     )
-    .orFail(() => new NotFoundError('Указанный _id не найден'))
-    .then((card) => {
-      if (!card) {
-        return next(new NotFoundError('Карточка с указанным _id не найдена'));
-      }
-      return res.send({ card, message: 'Лайк успешно поставлен' });
+    .orFail(() => {
+      throw new NotFoundError('Указанный _id не найден');
     })
+    .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные для постановки лайка'));
+        throw new BadRequestError('Переданы некорректные данные для постановки лайка');
+      } else if (err.name === 'NotFound') {
+        throw new NotFoundError('Карточка с указанным _id не найдена');
       } else {
         next(err);
       }
@@ -78,20 +81,19 @@ module.exports.likeCard = (req, res, next) => {
 module.exports.dislikeCard = (req, res, next) => {
   Card
     .findByIdAndUpdate(
-      req.params.cardId,
+      req.params.id,
       { $pull: { likes: req.user._id } },
       { new: true },
     )
-    .orFail(() => new NotFoundError('Указанный _id не найден'))
-    .then((card) => {
-      if (!card) {
-        return next(new NotFoundError('Карточка с указанным _id не найдена'));
-      }
-      return res.send({ card, message: 'Лайк успешно удален' });
+    .orFail(() => {
+      throw new NotFoundError('Указанный _id не найден');
     })
+    .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные для снятия лайка'));
+        throw new BadRequestError('Переданы некорректные данные для снятия лайка');
+      } else if (err.name === 'NotFound') {
+        throw new NotFoundError('Карточка с указанным _id не найдена');
       } else {
         next(err);
       }

@@ -7,7 +7,7 @@ function Header(props) {
       <img className="header__logo" src={logo} alt="Логотип Mesto"/>
       <nav className="header__auth">
         <p className="header__text">{props.mail}</p>
-        <Link to={props.route} className="header__link" type="button" onClick={props.onClick}>{props.title}</Link>
+        <Link to={props.route} className="header__link" onClick={props.onClick}>{props.title}</Link>
       </nav>
     </header>
   )

@@ -1,52 +1,36 @@
-require('dotenv').config();
+const { JWT_SECRET, NODE_ENV } = process.env;
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
 const User = require('../models/user');
-const { jwtKey } = require('../utils/jwtKey');
-
 const {
-  AuthError,
   BadRequestError,
   ConflictError,
   NotFoundError,
 } = require('../errors/index-errors');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
-
-module.exports.getAllUsers = (req, res, next) => {
-  User
-    .find({})
-    .then((users) => res.send({ users }))
+module.exports.getUsers = (req, res, next) => {
+  const { allUsers } = {};
+  return User
+    .find(allUsers)
+    .then((users) => res.send(users))
     .catch(next);
 };
 
-module.exports.getCurrentUser = (req, res, next) => {
-  User
-    .findById(req.user._id)
-    .then((user) => {
-      if (!user) {
-        return next(new NotFoundError('Пользователь по указанному _id не найден'));
-      }
-      return res.send({ user });
-    })
-    .catch(next);
-};
+module.exports.getUser = (req, res, next) => {
+  const { id } = req.params;
 
-module.exports.getUserById = (req, res, next) => {
-  const { userId } = req.params;
-
-  User
-    .findById(userId)
-    .then((user) => {
-      if (!user) {
-        return next(new NotFoundError('Пользователь по указанному _id не найден'));
-      }
-      return res.send({ user });
+  return User
+    .findById(id)
+    .orFail(() => {
+      throw new NotFoundError('Пользователь по указанному _id не найден');
     })
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError(`Переданы некорректные данные при создании пользователя -- ${err.name}`));
+        throw new BadRequestError(`Переданы некорректные данные о пользователе -- ${err.name}`);
+      } else if (err.name === 'NotFound') {
+        throw new NotFoundError('Пользователь по указанному _id не найден');
       } else {
         next(err);
       }
@@ -84,68 +68,40 @@ module.exports.createUser = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.login = (req, res, next) => {
-  const { email, password } = req.body;
-
-  User
-    .findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : jwtKey, { expiresIn: '7d' });
-      res
-        .cookie('jwt', token, {
-          maxAge: 3600000,
-          httpOnly: true,
-          sameSite: false,
-        })
-        .send({ token });
-    })
-    .catch(next);
-};
-
-module.exports.logout = (req, res, next) => {
+module.exports.getCurrentUser = (req, res, next) => {
   User
     .findById(req.user._id)
-    .then((user) => {
-      if (!user) {
-        return next(new NotFoundError('Пользователь по указанному _id не найден'));
-      }
-      return res.clearCookie('jwt').send({ message: 'Выход' });
+    .orFail(() => {
+      throw new NotFoundError('Пользователь не найден');
     })
-    .catch(next);
+    .then((user) => res.send({ user }))
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        throw new BadRequestError(`Переданы некорректные данные о текущем пользователе -- ${err.name}`);
+      } else if (err.name === 'NotFound') {
+        throw new NotFoundError('Пользователь по указанному _id не найден');
+      } else {
+        next(err);
+      }
+    });
 };
 
-module.exports.checkCookies = (req, res) => {
-  const cookie = req.cookies;
-  if (!cookie) {
-    throw new AuthError('Требуется авторизоваться');
-  }
-  const token = cookie.jwt;
-  try {
-    jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : jwtKey);
-    res.send({ message: 'OK' });
-  } catch (err) {
-    res.send({ message: 'Unauthorized' });
-  }
-};
-
-module.exports.updateProfile = (req, res, next) => {
+module.exports.updateUser = (req, res, next) => {
   const { name, about } = req.body;
 
-  User
+  return User
     .findByIdAndUpdate(
       { _id: req.user._id },
       { name, about },
       { new: true, runValidators: true },
     )
-    .then((user) => {
-      if (!user) {
-        return next(new NotFoundError('Пользователь по указанному _id не найден'));
-      }
-      return res.send({ user });
+    .orFail(() => {
+      throw new NotFoundError('Пользователь по указанному _id не найден');
     })
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new BadRequestError(`Переданы некорректные данные при обновлении профиля -- ${err.name}`));
+        throw new BadRequestError(`Переданы некорректные данные при обновлении профиля -- ${err.name}`);
       } else {
         next(err);
       }
@@ -155,23 +111,33 @@ module.exports.updateProfile = (req, res, next) => {
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
-  User
+  return User
     .findByIdAndUpdate(
       req.user._id,
       { avatar },
       { new: true, runValidators: true },
     )
-    .then((user) => {
-      if (!user) {
-        return next(new NotFoundError('Пользователь по указанному _id не найден'));
-      }
-      return res.send({ user });
+    .orFail(() => {
+      throw new NotFoundError('Пользователь по указанному _id не найден');
     })
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new BadRequestError(`Переданы некорректные данные при обновлении профиля -- ${err.name}`));
+        throw new BadRequestError(`Переданы некорректные данные при обновлении аватара -- ${err.name}`);
       } else {
         next(err);
       }
     });
+};
+
+module.exports.login = (req, res, next) => {
+  const { email, password } = req.body;
+
+  return User
+    .findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key', { expiresIn: '7d' });
+      res.send({ token });
+    })
+    .catch(next);
 };

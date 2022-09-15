@@ -1,14 +1,15 @@
 class Api {
-  constructor(options) {
-    this._baseUrl = options.baseUrl;
-    this._headers = options.headers;
+  constructor({ baseUrl, headers }) {
+    this._headers = headers;
+    this._baseUrl = baseUrl;
   }
 
-  _handleRes(res) {
+  _checkResponse(res) {
     if (res.ok) {
       return res.json();
+    } else {
+      return Promise.reject(`${res.status} ${res.statusText}`);
     }
-    return Promise.reject(`${res.status} ${res.statusText}`);
   }
 
   _getHeaders() {
@@ -23,7 +24,7 @@ class Api {
     return fetch(`${this._baseUrl}/users/me`, {
       headers: this._getHeaders(),
     }).then((res) => {
-      return this._handleRes(res);
+      return this._checkResponse(res);
     });
   }
 
@@ -31,7 +32,7 @@ class Api {
     return fetch(`${this._baseUrl}/cards`, {
       headers: this._getHeaders(),
     }).then((res) => {
-      return this._handleRes(res);
+      return this._checkResponse(res);
     });
   }
 
@@ -44,7 +45,7 @@ class Api {
         about: data.profile_job,
       }),
     }).then((res) => {
-      return this._handleRes(res);
+      return this._checkResponse(res);
     });
   }
 
@@ -57,7 +58,7 @@ class Api {
         link: user.link,
       }),
     }).then((res) => {
-      return this._handleRes(res);
+      return this._checkResponse(res);
     });
   }
 
@@ -66,7 +67,7 @@ class Api {
       method: 'DELETE',
       headers: this._getHeaders(),
     }).then((res) => {
-      return this._handleRes(res);
+      return this._checkResponse(res);
     });
   }
 
@@ -75,7 +76,7 @@ class Api {
       method: 'PUT',
       headers: this._getHeaders(),
     }).then((res) => {
-      return this._handleRes(res);
+      return this._checkResponse(res);
     });
   }
 
@@ -84,7 +85,7 @@ class Api {
       method: 'DELETE',
       headers: this._getHeaders(),
     }).then((res) => {
-      return this._handleRes(res);
+      return this._checkResponse(res);
     });
   }
 
@@ -96,13 +97,13 @@ class Api {
         avatar: data.avatar,
       }),
     }).then((res) => {
-      return this._handleRes(res);
+      return this._checkResponse(res);
     });
   }
 }
 
 const api = new Api({
-  baseUrl: 'http://localhost:3000',
+  baseUrl: 'http://localhost:3001',
   headers: {
     'Content-Type': 'application/json',
   },

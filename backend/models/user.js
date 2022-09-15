@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
 const bcrypt = require('bcryptjs');
+// const isUrl = require('validator/lib/isURL');
+const isEmail = require('validator/lib/isEmail');
 const { AuthError } = require('../errors/index-errors');
 const { urlRegex } = require('../utils/regex');
 
@@ -24,7 +25,7 @@ const userSchema = new mongoose.Schema({
       validator(v) {
         return urlRegex.test(v);
       },
-      message: (props) => `${props.value} -- невалидная ссылка на картинку`,
+      message: (props) => `${props.value} -- невалидная ссылка на картинку аватарки`,
     },
   },
   email: {
@@ -32,8 +33,8 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     validate: {
-      validator: (email) => validator.isEmail(email),
-      message: 'Некорректный адрес почты',
+      validator: (email) => isEmail(email),
+      message: 'Некорректый адрес почты',
     },
   },
   password: {
@@ -41,6 +42,8 @@ const userSchema = new mongoose.Schema({
     required: true,
     select: false,
   },
+}, {
+  versionKey: false,
 });
 
 // eslint-disable-next-line func-names
@@ -50,13 +53,11 @@ userSchema.statics.findUserByCredentials = function (email, password) {
       if (!user) {
         throw new AuthError('Неверно указаны почта или пароль');
       }
-
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
             throw new AuthError('Неверно указаны почта или пароль');
           }
-
           return user;
         });
     });

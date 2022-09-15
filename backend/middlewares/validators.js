@@ -1,38 +1,34 @@
 const { celebrate, Joi } = require('celebrate');
-const validator = require('validator');
-const { BadRequestError } = require('../errors/index-errors');
+const isUrl = require('validator/lib/isURL');
+const BadRequestError = require('../errors/index-errors');
 const { urlRegex } = require('../utils/regex');
 
-// чтобы при создании карточки выбрасывал ошибку при невалидном url
 const validateUrl = (url) => {
-  const result = validator.isURL(url);
+  const result = isUrl(url);
   if (result) {
     return url;
   }
   throw new BadRequestError('Невалидный URL');
 };
 
-// для get user by id
 const validateUserId = celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().hex().length(24),
+    id: Joi.string().required().hex().length(24),
   }),
 });
 
-// для регистрации (создания) нового пользователя
-const validateSignUp = celebrate({
+const validateLogin = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(urlRegex),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
 });
 
-// когда существующий пользователь логинится
-const validateSignIn = celebrate({
+const validateUserCreating = celebrate({
   body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().pattern(urlRegex),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
@@ -40,20 +36,20 @@ const validateSignIn = celebrate({
 
 const validateUpdateProfile = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
+    name: Joi.string().min(2).max(30).required(),
+    about: Joi.string().min(2).max(30).required(),
   }),
 });
 
 const validateUpdateAvatar = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().pattern(urlRegex),
+    avatar: Joi.string().required().pattern(urlRegex),
   }),
 });
 
 const validateCardCreation = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
+    name: Joi.string().min(2).max(30).required(),
     link: Joi.string().required().custom(validateUrl),
   }),
 });
@@ -61,14 +57,14 @@ const validateCardCreation = celebrate({
 // для удаления карточки пользоваля, для лайка и для дизлайка
 const validateCardId = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().hex().length(24),
+    id: Joi.string().required().hex().length(24),
   }),
 });
 
 module.exports = {
   validateUserId,
-  validateSignUp,
-  validateSignIn,
+  validateLogin,
+  validateUserCreating,
   validateUpdateProfile,
   validateUpdateAvatar,
   validateCardCreation,
