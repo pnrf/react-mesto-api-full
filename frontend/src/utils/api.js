@@ -103,7 +103,8 @@ class Api {
 }
 
 const api = new Api({
-  baseUrl: 'http://localhost:3001',
+  // baseUrl: 'http://localhost:3001',
+  baseUrl: 'https://api.pankratov.nomorepartiesxyz.ru',
   headers: {
     'Content-Type': 'application/json',
   },

@@ -1,5 +1,5 @@
-export const BASE_URL = 'http://localhost:3001';
-// const BASE_URL = 'https://api.pankratov.nomorepartiesxyz.ru';
+// export const BASE_URL = 'http://localhost:3001';
+export const BASE_URL = 'https://api.pankratov.nomorepartiesxyz.ru';
 
 export function registerUser(email, password) {
   return fetch(`${BASE_URL}/signup`, {
