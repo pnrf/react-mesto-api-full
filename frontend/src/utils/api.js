@@ -104,7 +104,8 @@ class Api {
 
 const api = new Api({
   // baseUrl: 'http://localhost:3001',
-  baseUrl: 'https://api.pankratov.nomorepartiesxyz.ru',
+  // baseUrl: 'https://api.pankratov.nomorepartiesxyz.ru',
+  baseUrl: 'https://pankratov.nomorepartiesxyz.ru/api',
   headers: {
     'Content-Type': 'application/json',
   },
