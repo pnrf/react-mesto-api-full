@@ -51,7 +51,7 @@ const allowedCors = [
   'http://www.api.pankratov.nomorepartiesxyz.ru',
 ];
 
-module.exports = (req, res, next) => {
+module.exports.cors = (req, res, next) => {
   const { origin } = req.headers;
   if (allowedCors.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
