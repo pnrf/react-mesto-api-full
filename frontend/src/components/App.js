@@ -269,12 +269,12 @@ function App() {
               <>
                 <ProtectedRoute
                   component={Main}
+                  cards={cards}
                   isLogged={isLoggedIn}
                   onEditAvatar={handleEditAvatarClick}
                   onEditProfile={handleEditProfileClick}
                   onAddPlace={handleAddPlaceClick}
                   onCardClick={handleCardClick}
-                  cards={cards}
                   onCardLike={handleCardLike}
                   onCardDelete={handleDeleteCardClick}
                 />
@@ -286,51 +286,51 @@ function App() {
           <Route path="*" element={<Navigate to={isLoggedIn ? "/" : "/signin"}/>} />
         </Routes>
 
-        <EditProfilePopup
-          isOpen={isEditProfilePopupOpen}
-          onCloseClick={handlePopupCloseClick}
-          onClose={closeAllPopups}
-          onSubmit={handleUpdateUser}
-          isLoading = {isLoading}
-        />
-
         <AddPlacePopup
-          isOpen={isAddPlacePopupOpen}
-          onCloseClick={handlePopupCloseClick}
-          onClose={closeAllPopups}
-          onSubmit={handleAddPlaceSubmit}
           isLoading = {isLoading}
+          isOpen={isAddPlacePopupOpen}
+          onClose={closeAllPopups}
+          onCloseClick={handlePopupCloseClick}
+          onSubmit={handleAddPlaceSubmit}
         />
 
         <DeleteCardPopup
-          isOpen={isDeletePopupOpen}
-          onCloseClick={handlePopupCloseClick}
-          onClose={closeAllPopups}
-          onSubmit={handleDeleteCard}
           card={selectedCard}
+          isOpen={isDeletePopupOpen}
+          onClose={closeAllPopups}
+          onCloseClick={handlePopupCloseClick}
+          onSubmit={handleDeleteCard}
         />
 
         <EditAvatarPopup
-          isOpen={isEditAvatarPopupOpen}
-          onCloseClick={handlePopupCloseClick}
-          onClose={closeAllPopups}
-          onSubmit={handleAvatarUpdate}
           isLoading = {isLoading}
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closeAllPopups}
+          onCloseClick={handlePopupCloseClick}
+          onSubmit={handleAvatarUpdate}
+        />
+
+        <EditProfilePopup
+          isLoading = {isLoading}
+          isOpen={isEditProfilePopupOpen}
+          onClose={closeAllPopups}
+          onCloseClick={handlePopupCloseClick}
+          onSubmit={handleUpdateUser}
         />
 
         <ImagePopup
           card={selectedCard}
           isOpen={isImagePopupOpen}
-          onCloseClick={handlePopupCloseClick}
           onClose={closeAllPopups}
+          onCloseClick={handlePopupCloseClick}
         />
 
         <InfoTooltip
           image={popupImage}
           title={popupTitle}
           isOpen={infoTooltip}
-          onCloseClick={handlePopupCloseClick}
           onClose={closeAllPopups}
+          onCloseClick={handlePopupCloseClick}
         />
       </div>
     </CurrentUserContext.Provider>

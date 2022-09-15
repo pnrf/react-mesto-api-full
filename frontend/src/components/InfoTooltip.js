@@ -1,11 +1,11 @@
-function InfoTooltip(props) {
+function InfoTooltip({ image, title, isOpen, onClose, onCloseClick }) {
 
   return (
-    <section className={`popup ${props.isOpen ? 'popup_opened' : ''}`} onClick={props.onCloseClick}>
+    <section className={`popup ${isOpen ? 'popup_opened' : ''}`} onClick={onCloseClick}>
       <figure className="popup__container">
-        <button className="popup__close-button" type="button" title="Закрыть" onClick={props.onClose}/>
-        <img className="popup__icon" src={props.image} alt={props.title}/>
-        <figcaption className="popup__icon-caption">{props.title}</figcaption>
+        <button className="popup__close-button" type="button" title="Закрыть" onClick={onClose}/>
+        <img className="popup__icon" src={image} alt={title}/>
+        <figcaption className="popup__icon-caption">{title}</figcaption>
       </figure>
     </section>
   );

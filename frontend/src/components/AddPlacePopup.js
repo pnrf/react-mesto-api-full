@@ -1,7 +1,7 @@
 import React from "react";
 import PopupWithForm from "./PopupWithForm";
 
-function AddPlacePopup(props) {
+function AddPlacePopup({ isLoading, isOpen, onClose, onCloseClick, onSubmit }) {
   const [name, setName] = React.useState('');
   const [link, setLink] = React.useState('');
 
@@ -16,27 +16,27 @@ function AddPlacePopup(props) {
   function handleSubmit(evt) {
     evt.preventDefault();
 
-    props.onSubmit({
+    onSubmit({
       name: name,
       link: link,
     });
 
-    props.onClose();
+    onClose();
   }
 
   React.useEffect(() => {
-    if (props.isOpen) {
+    if (isOpen) {
       setName('');
       setLink('');
     }
-  }, [props.isOpen]);
+  }, [isOpen]);
 
   return(
     <PopupWithForm
-      isLoading = {props.isLoading}
-      isOpen={props.isOpen}
-      onCloseClick={props.onCloseClick}
-      onClose={props.onClose}
+      isLoading = {isLoading}
+      isOpen={isOpen}
+      onCloseClick={onCloseClick}
+      onClose={onClose}
       name={'add'}
       form={'placeData'}
       title={'Новое место'}

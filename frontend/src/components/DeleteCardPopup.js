@@ -1,20 +1,20 @@
 import PopupWithForm from './PopupWithForm';
 
-function DeleteCardPopup(props) {
+function DeleteCardPopup({ card, isOpen, onClose, onCloseClick, onSubmit }) {
   function handleSubmit(evt) {
     evt.preventDefault();
 
-    props.onSubmit(props.card);
+    onSubmit(card);
   }
 
   return (
     <PopupWithForm
-      isOpen={props.isOpen}
-      onCloseClick={props.onCloseClick}
-      onClose={props.onClose}
+      isOpen={isOpen}
+      onCloseClick={onCloseClick}
+      onClose={onClose}
       name={'delete'}
-      title={'Подтвердите удаление'}
-      buttonText={'Подтверждаю'}
+      title={'Вы уверены?'}
+      buttonText={'Да'}
       onSubmit={handleSubmit}
     />
   );
