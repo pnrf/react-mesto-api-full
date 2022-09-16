@@ -28,6 +28,13 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Удалить этот код после успешного прохождения ревью:
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
 app.use(cors);
 app.use(helmet());
 app.use(limiter);
@@ -41,13 +48,6 @@ app.use(routes);
 app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
-
-// Удалить этот код после успешного прохождения ревью:
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
 
 app.listen(PORT, () => {
   console.log(`Приложение слушает порт: ${PORT}`);
