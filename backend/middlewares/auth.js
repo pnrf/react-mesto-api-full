@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization) {
-    throw new AuthError('Требуется авторизация');
+    throw new AuthError('Требуется авторизоваться');
   }
 
   const token = authorization.replace('Bearer ', '');
@@ -16,11 +16,10 @@ module.exports = (req, res, next) => {
 
   try {
     payload = jwt.verify(token, `${NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key'}`);
+    req.user = payload;
   } catch (err) {
-    throw new AuthError('Требуется авторизация');
+    throw new AuthError('Требуется авторизация!');
   }
-
-  req.user = payload;
 
   next();
 };
